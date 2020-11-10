@@ -20,27 +20,31 @@ const superSavePassword = "Igel";
 //   yahoo: "1020304050",
 // };
 
-const questions = [
-  {
-    type: "password",
-    name: "masterPassword",
-    message: "Whats your password?",
-  },
-  {
-    type: "input",
-    name: "passWords",
-    message: "What password did you forget?",
-  },
-];
+const questionMainPassword = {
+  type: "password",
+  name: "masterPassword",
+  message: "Whats your password?",
+};
+
+const questionPassword = {
+  type: "input",
+  name: "passWords",
+  message: "What password did you forget?",
+};
 
 async function validateAccess() {
-  const { passWords, masterPassword } = await inquirer.prompt(questions);
+  const { masterPassword } = await inquirer.prompt(questionMainPassword);
 
   if (masterPassword !== superSavePassword) {
     console.error(chalk.red("Get Out! You are wrong!"));
+
     validateAccess();
     return;
+  } else {
+    console.log(chalk.green("👍"));
   }
+
+  const { passWords } = await inquirer.prompt(questionPassword);
 
   const fs = require("fs");
 
