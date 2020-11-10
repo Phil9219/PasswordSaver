@@ -14,11 +14,11 @@ const inquirer = require("inquirer");
 
 const superSavePassword = "Igel";
 
-const passWordSafe = {
-  wifi: "123456789",
-  gmail: "987654321",
-  yahoo: "1020304050",
-};
+// const passWordSafe = {
+//   wifi: "123456789",
+//   gmail: "987654321",
+//   yahoo: "1020304050",
+// };
 
 const questions = [
   {
@@ -41,6 +41,12 @@ async function validateAccess() {
     validateAccess();
     return;
   }
+
+  const fs = require("fs");
+
+  const passWordSafe = JSON.parse(
+    fs.readFileSync("/Users/philipp/dev/PasswordSaver/db.json", "utf8")
+  );
 
   const passWordKey = Object.keys(passWordSafe);
 
