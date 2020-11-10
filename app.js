@@ -32,6 +32,12 @@ const questionPassword = {
   message: "What password did you forget?",
 };
 
+const questionChangePW = {
+  type: "input",
+  name: "Y",
+  message: "Do you want to change the password? [Y/N]",
+};
+
 async function validateAccess() {
   const { masterPassword } = await inquirer.prompt(questionMainPassword);
 
@@ -42,6 +48,14 @@ async function validateAccess() {
     return;
   } else {
     console.log(chalk.green("👍"));
+  }
+
+  const { Y } = await inquirer.prompt(questionChangePW);
+
+  if (Y === "Y") {
+    console.log(chalk.green("I will change it for you"));
+  } else {
+    console.log(chalk.red("Go on"));
   }
 
   const { passWords } = await inquirer.prompt(questionPassword);
@@ -62,3 +76,24 @@ async function validateAccess() {
 }
 
 validateAccess();
+
+async function changePassword(passWordSafe) {
+  const content = "Some content!";
+
+  try {
+    const data = fs.writeFileSync(
+      "/Users/philipp/dev/PasswordSaver/db.json",
+      content
+    );
+    //file written successfully
+  } catch (err) {
+    console.error(err);
+  }
+
+  fs.writeFile(
+    "/Users/philipp/dev/PasswordSaver/db.json",
+    content,
+    { flag: "a+" },
+    (err) => {}
+  );
+}
