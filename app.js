@@ -8,22 +8,33 @@ const args = process.argv.slice(2);
 const passwordName = args[0];
 console.log;
 
-if (passwordName === "phil") {
-  console.log("Your PW is ppilihp");
-} else {
-  console.log("access denied");
-}
-
 const inquirer = require("inquirer");
 
-var questions = [
+const superSavePassword = "Igel";
+
+const questions = [
   {
     type: "input",
     name: "name",
     message: "What's your name?",
   },
+  {
+    type: "password",
+    name: "masterPassword",
+    message: "Whats your password?",
+  },
 ];
 
-inquirer.prompt(questions).then((answers) => {
-  console.log(`Hi ${answers["name"]}!`);
-});
+async function validateAccess() {
+  const { masterPassword } = await inquirer.prompt(questions);
+
+  if (masterPassword !== superSavePassword) {
+    console.error("Get Out! You are wrong!");
+    validateAccess();
+    return;
+  } else {
+    console.log("Your Are In");
+  }
+}
+
+validateAccess();
