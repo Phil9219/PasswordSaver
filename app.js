@@ -53,7 +53,7 @@ async function validateAccess() {
   );
 
   if (choice === "Yes") {
-    changePassword(passWordSafe);
+    await changePassword(passWordSafe);
   } else {
     console.log(chalk.red("Go on"));
   }
@@ -72,6 +72,7 @@ async function validateAccess() {
 validateAccess();
 
 async function changePassword(passWordSafe) {
+  const fs = require("fs");
   // Gib Liste von den bestehenden PWs.
   const choice = [];
   for (let key in passWordSafe) {
@@ -97,7 +98,10 @@ async function changePassword(passWordSafe) {
   const { newPassword } = await inquirer.prompt(askForNewPassword);
   // Safe nehmen und Wert ändern.
   passWordSafe[choiceBenutzer] = newPassword;
-  fs.writeFileSync("./db.json", JSON.parse(passWordSafe));
+  fs.writeFileSync(
+    "/Users/philipp/dev/PasswordSaver/db.json",
+    JSON.stringify(passWordSafe)
+  );
 }
 
 // async function changePassword(passWordSafe) {
