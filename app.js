@@ -11,28 +11,36 @@ MongoClient.connect(url, function (err, client) {
   const db = client.db("PasswordSaver");
 
   // client.close();
+  // db.collection("inventory")
+  //   .insertOne({
+  //     item: "canvas",
+  //     qty: 100,
+  //     tags: ["cotton"],
+  //     size: { h: 28, w: 35.5, uom: "cm" },
+  //   })
+  //   .then(function (result) {
+  //     // process result
+  //   });
+
+  // var cursor = db.collection("inventory").find({});
+
+  // function iterateFunc(doc) {
+  //   console.log(JSON.stringify(doc, null, 4));
+  // }
+
+  // function errorFunc(error) {
+  //   console.log(error);
+  // }
+
+  // cursor.forEach(iterateFunc, errorFunc);
+
   db.collection("inventory")
-    .insertOne({
+    .deleteOne({
       item: "canvas",
-      qty: 100,
-      tags: ["cotton"],
-      size: { h: 28, w: 35.5, uom: "cm" },
     })
     .then(function (result) {
       // process result
     });
-
-  var cursor = db.collection("passwords").find({});
-
-  function iterateFunc(doc) {
-    console.log(JSON.stringify(doc, null, 4));
-  }
-
-  function errorFunc(error) {
-    console.log(error);
-  }
-
-  cursor.forEach(iterateFunc, errorFunc);
 });
 
 const chalk = require("chalk");
