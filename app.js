@@ -1,5 +1,5 @@
 const chalk = require("chalk");
-
+const CryptoJS = require("crypto-js");
 console.log("wifi=123");
 
 process.argv.forEach((val, index) => {
@@ -11,31 +11,34 @@ const passwordName = args[0];
 const newPasswordValue = args[1];
 console.log;
 
-const inquirer = require("inquirer");
+// const inquirer = require("inquirer");
 
 const superSavePassword = "Igel";
 
-const questionMainPassword = {
-  type: "password",
-  name: "masterPassword",
-  message: "Whats your password?",
-};
+const { askForMasterPassword } = require("./lib/questions");
+const { whatPasswordIsForgotten } = require("./lib/questions");
+const { changePassword } = require("./lib/questions");
+// const questionMainPassword = {
+//   type: "password",
+//   name: "masterPassword",
+//   message: "Whats your password?",
+// };
 
-const questionPassword = {
-  type: "input",
-  name: "passWords",
-  message: "What password did you forget?",
-};
+// const questionPassword = {
+//   type: "input",
+//   name: "passWords",
+//   message: "What password did you forget?",
+// };
 
-const questionChangePW = {
-  type: "list",
-  name: "choice",
-  message: "Do you want to change the password?",
-  choices: ["Yes", "No"],
-};
+// const questionChangePW = {
+//   type: "list",
+//   name: "choice",
+//   message: "Do you want to change the password?",
+//   choices: ["Yes", "No"],
+// };
 
 async function validateAccess() {
-  const { masterPassword } = await inquirer.prompt(questionMainPassword);
+  const { masterPassword } = await askForMasterPassword;
 
   if (masterPassword !== superSavePassword) {
     console.error(chalk.red("Get Out! You are wrong!"));
@@ -46,7 +49,7 @@ async function validateAccess() {
     console.log(chalk.green("👍"));
   }
 
-  const { choice } = await inquirer.prompt(questionChangePW);
+  const { choice } = await changePassword;
   const fs = require("fs");
   const passWordSafe = JSON.parse(
     fs.readFileSync("/Users/philipp/dev/PasswordSaver/db.json", "utf8")
@@ -58,7 +61,7 @@ async function validateAccess() {
     console.log(chalk.red("Go on"));
   }
 
-  const { passWords } = await inquirer.prompt(questionPassword);
+  const { passWords } = await whatPasswordIsForgotten;
 
   const passWordKey = Object.keys(passWordSafe);
 
