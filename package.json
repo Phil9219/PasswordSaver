@@ -6,7 +6,8 @@
   "private": "true",
   "dependencies": {
     "chalk": "^4.1.0",
-    "inquirer": "^7.3.3"
+    "inquirer": "^7.3.3",
+    "mongodb": "^3.6.3"
   },
   "devDependencies": {},
   "scripts": {
