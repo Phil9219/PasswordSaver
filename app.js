@@ -8,17 +8,12 @@ process.argv.forEach((val, index) => {
 
 const args = process.argv.slice(2);
 const passwordName = args[0];
+const newPasswordValue = args[1];
 console.log;
 
 const inquirer = require("inquirer");
 
 const superSavePassword = "Igel";
-
-// const passWordSafe = {
-//   wifi: "123456789",
-//   gmail: "987654321",
-//   yahoo: "1020304050",
-// };
 
 const questionMainPassword = {
   type: "password",
@@ -33,9 +28,10 @@ const questionPassword = {
 };
 
 const questionChangePW = {
-  type: "input",
-  name: "Y",
-  message: "Do you want to change the password? [Y/N]",
+  type: "list",
+  name: "choice",
+  message: "Do you want to change the password?",
+  choices: ["Yes", "No"],
 };
 
 async function validateAccess() {
@@ -50,21 +46,19 @@ async function validateAccess() {
     console.log(chalk.green("👍"));
   }
 
-  const { Y } = await inquirer.prompt(questionChangePW);
+  const { choice } = await inquirer.prompt(questionChangePW);
+  const fs = require("fs");
+  const passWordSafe = JSON.parse(
+    fs.readFileSync("/Users/philipp/dev/PasswordSaver/db.json", "utf8")
+  );
 
-  if (Y === "Y") {
-    console.log(chalk.green("I will change it for you"));
+  if (choice === "Yes") {
+    changePassword(passWordSafe);
   } else {
     console.log(chalk.red("Go on"));
   }
 
   const { passWords } = await inquirer.prompt(questionPassword);
-
-  const fs = require("fs");
-
-  const passWordSafe = JSON.parse(
-    fs.readFileSync("/Users/philipp/dev/PasswordSaver/db.json", "utf8")
-  );
 
   const passWordKey = Object.keys(passWordSafe);
 
@@ -78,22 +72,51 @@ async function validateAccess() {
 validateAccess();
 
 async function changePassword(passWordSafe) {
-  const content = "Some content!";
-
-  try {
-    const data = fs.writeFileSync(
-      "/Users/philipp/dev/PasswordSaver/db.json",
-      content
-    );
-    //file written successfully
-  } catch (err) {
-    console.error(err);
+  // Gib Liste von den bestehenden PWs.
+  const choice = [];
+  for (let key in passWordSafe) {
+    choice.push(key);
   }
 
-  fs.writeFile(
-    "/Users/philipp/dev/PasswordSaver/db.json",
-    content,
-    { flag: "a+" },
-    (err) => {}
-  );
+  const whichPwToChange = {
+    type: "list",
+    name: "choiceBenutzer",
+    message: "Which Password do you want to change?\n",
+    choices: choice,
+  };
+  // Gib choices an Benutzer aus mit list. (ergebnis = choiceBenutzer)
+  const { choiceBenutzer } = await inquirer.prompt(whichPwToChange);
+
+  // Frag den Bunutzer nach dem PW (benutzer = newPassword)
+
+  const askForNewPassword = {
+    type: "string",
+    name: "newPassword",
+    message: "What is the new Password?\n",
+  };
+  const { newPassword } = await inquirer.prompt(askForNewPassword);
+  // Safe nehmen und Wert ändern.
+  passWordSafe[choiceBenutzer] = newPassword;
+  fs.writeFileSync("./db.json", JSON.parse(passWordSafe));
 }
+
+// async function changePassword(passWordSafe) {
+//   const content = "Some content!";
+
+//   try {
+//     const data = fs.writeFileSync(
+//       "/Users/philipp/dev/PasswordSaver/db.json",
+//       content
+//     );
+//     //file written successfully
+//   } catch (err) {
+//     console.error(err);
+//   }
+
+//   fs.writeFile(
+//     "/Users/philipp/dev/PasswordSaver/db.json",
+//     content,
+//     { flag: "a+" },
+//     (err) => {}
+//   );
+// }
